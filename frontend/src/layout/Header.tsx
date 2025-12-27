@@ -1,4 +1,4 @@
-const Card = () => {
+const Header = () => {
     return (
         <div className='relative h-[2000px] w-screen bg-sky-100 mt-[70px]'>
             
@@ -6,4 +6,4 @@ const Card = () => {
     );
 }
 
-export default Card;
+export default Header;
