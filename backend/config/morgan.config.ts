@@ -13,7 +13,7 @@ token('colored-method', (req) => {
 });
 
 // 🌈 Colorize status codes
-token('colored-status', (req, res) => {
+token('colored-status', (req: Request, res: Response) => {
   const status = res.statusCode;
   if (status >= 500) return `\x1b[31m${status}\x1b[0m`; // red
   if (status >= 400) return `\x1b[33m${status}\x1b[0m`; // yellow

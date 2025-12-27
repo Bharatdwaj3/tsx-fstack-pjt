@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import {readerModel as Reader} from "../models/reader.models.js";
 import {userModel as User} from "../models/user.model.js";
 import cloudinary from "../service/cloudinary.service.js";
+import type { RequestHandler } from "express";
 
-const getReaders=async(req, res)=>{
+const getReaders:RequestHandler=async(req, res)=>{
     try{
 
     }catch(error){
@@ -12,7 +13,7 @@ const getReaders=async(req, res)=>{
     }
 };
 
-const getReader=async(req, res)=>{
+const getReader:RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         if(!mongoose.Types.ObjectId.isValid(id)){
@@ -60,7 +61,7 @@ const getReader=async(req, res)=>{
     }
 };
 
-const createReader=async(req, res)=>{
+const createReader:RequestHandler=async(req, res)=>{
     try{
         const ReaderData=req.body;
         if(req.file){
@@ -75,7 +76,7 @@ const createReader=async(req, res)=>{
     }
 };
 
-const updateReaderProfile=async(req, res)=>{
+const updateReaderProfile:RequestHandler=async(req, res)=>{
     try{
         const userId=req.user.id;
         const user =   await User.findById(userId);
@@ -115,7 +116,7 @@ const updateReaderProfile=async(req, res)=>{
     }
 };
 
-const updateReader=async(req, res)=>{
+const updateReader:RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         const updateData={...req.body};
@@ -152,7 +153,7 @@ const updateReader=async(req, res)=>{
     }
 };
 
-const deleteReader=async(req, res)=>{
+const deleteReader:RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         const deleteReader=await Reader.findByIdAndDelete(id);

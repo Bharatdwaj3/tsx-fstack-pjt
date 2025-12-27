@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import { userModel as User } from '../models/user.model.js';
 import { JWT_ACC_SECRECT, JWT_ACC_EXPIRES_IN, JWT_REF_SECRECT, JWT_REF_EXPIRES_IN } from "../config/env.config.js";
+import type { Request, Response } from "express";
+import { User } from './../interfaces/index';
 
 
 const cookieOpts=(maxAge, path='/')=>({
@@ -11,7 +13,7 @@ const cookieOpts=(maxAge, path='/')=>({
     maxAge: maxAge*1000
 });
 
-const setAccessToken=(res, user)=>{
+const setAccessToken=(res: Response, user)=>{
     const payload={
         user: {
             id: user._id.toString(),
@@ -23,7 +25,7 @@ const setAccessToken=(res, user)=>{
     return token;
 };
 
-const setRefreshToken=async (res, user)=>{
+const setRefreshToken=async (res: Response, user: User)=>{
     const payload={user: {id: user._id.toString()}};
     const token = jwt.sign(payload, JWT_REF_SECRECT, {expiresIn: JWT_REF_EXPIRES_IN});
     
@@ -55,7 +57,7 @@ const revokeRefreshToken=async(userID)=>{
     });
 }
 
-const refreshTokenHandler=async(req, res)=>{
+const refreshTokenHandler=async(req: Request, res: Response)=>{
     const token=req.cookies.refreshToken;
     if(!token){
         return res.status(401).json({
@@ -101,7 +103,7 @@ const refreshTokenHandler=async(req, res)=>{
 
 const destroySession=(req, res)=>{
     if(req.session){
-        req.session.destroy((err)=>{
+        req.session.destroy((err: Error)=>{
             if(err)
                 console.error("Session destroy error: ",err);
         });

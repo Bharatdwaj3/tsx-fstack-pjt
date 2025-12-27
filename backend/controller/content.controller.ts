@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import createHttpError from "http-errors";
 import {userModel as User} from "../models/user.model.js";
 import {contentModel as Content} from "../models/content.models.js";
 import cloudinary from "../service/cloudinary.service.js";
+import type { RequestHandler } from "express";
 
-const getContents=async(req, res)=>{
+const getContents:RequestHandler =async(req, res)=>{
     try{
 
     }catch(error){
@@ -12,7 +14,7 @@ const getContents=async(req, res)=>{
     }
 };
 
-const getContent=async(req, res)=>{
+const getContent:  RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         if(!mongoose.Types.ObjectId.isValid(id)){
@@ -60,7 +62,7 @@ const getContent=async(req, res)=>{
     }
 };
 
-const createContent=async(req, res)=>{
+const createContent: RequestHandler=async(req, res)=>{
     try{
         const ContentData=req.body;
         if(req.file){
@@ -76,7 +78,7 @@ const createContent=async(req, res)=>{
 };
 
 
-const updateContent=async(req, res)=>{
+const updateContent: RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         const updateData={...req.body};
@@ -113,7 +115,7 @@ const updateContent=async(req, res)=>{
     }
 };
 
-const deleteContent=async(req, res)=>{
+const deleteContent: RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         const deleteContent=await Content.findByIdAndDelete(id);

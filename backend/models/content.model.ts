@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, {Schema, model} from "mongoose";
 import express from 'express';
+import type { InferSchemaType} from "mongoose";
 
-export const content_Schema=new mongoose.Schema({
+const content_Schema=new Schema({
     
     title: {
         type: String,
@@ -36,4 +37,6 @@ export const content_Schema=new mongoose.Schema({
     }
 );
 
-export const contentModel = mongoose.model('contentModel', content_Schema,'content');
+type Content = InferSchemaType<typeof content_Schema>;
+
+export default model<Content>('contentModel', content_Schema,'content');

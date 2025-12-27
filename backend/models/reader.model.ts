@@ -1,7 +1,9 @@
-import  mongoose from "mongoose";
+import mongoose, {Schema, model} from "mongoose";
 import express from 'express';
+import type { InferSchemaType} from "mongoose";
 
-export const reader_Schema=new mongoose.Schema({
+
+const reader_Schema=new Schema({
     
     
     bio:{
@@ -37,4 +39,6 @@ export const reader_Schema=new mongoose.Schema({
     }
 );
 
-export const readerModel = mongoose.model('readerModel', reader_Schema,'reader');
+type Reader=InferSchemaType<typeof reader_Schema>
+
+export default model<Reader>('readerModel', reader_Schema,'reader');

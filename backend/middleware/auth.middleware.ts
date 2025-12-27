@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
 import { userModel as User } from '../models/user.model.js';
 import { JWT_ACC_SECRECT } from "../config/env.config.js";
+import type { NextFunction } from "express";
 
-export const authUser = async (req, res, next) => {
+export const authUser = async (req: Request, res: Response, next: NextFunction) => {
   let payload = null;
   let authMethod = null;
   const token = req.cookies.accessToken;

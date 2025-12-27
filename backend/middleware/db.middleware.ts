@@ -1,5 +1,6 @@
+import type { NextFunction } from "express";
 
-export const dbMiddleware = (err, req, res, next) => {
+export const dbMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('MONGO ERROR:', err);
   if (res.headersSent) {
     return next(err); 

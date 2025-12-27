@@ -1,6 +1,8 @@
+import mongoose, {Schema, model} from "mongoose";
 import express from 'express';
-import mongoose from "mongoose";
-export const user_Schema=new mongoose.Schema({
+import type { InferSchemaType} from "mongoose";
+
+const user_Schema=new Schema({
     userName: {
         type:String,
         required:[true, 'User Name is required'],
@@ -53,4 +55,6 @@ export const user_Schema=new mongoose.Schema({
 });
 
 
-export const contentModel = mongoose.model('contentModel', content_Schema,'content');
+type User=InferSchemaType<typeof user_Schema>
+
+export default model<User>('userModel', user_Schema,'content');

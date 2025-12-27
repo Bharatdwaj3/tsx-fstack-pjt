@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
 import { JWT_ACC_SECRECT } from "../config/env.config.js";
+import type { NextFunction, Request, Response } from "express";
 
 export const roleMiddleware = (allowedRoles = []) => {
-  return (req, res, next) => {
+  return (req: Request, res: Response, next: NextFunction) => {
 
     
     if (req.user && req.user.accountType) {

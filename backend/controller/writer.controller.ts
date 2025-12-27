@@ -2,8 +2,9 @@ import mongoose  from "mongoose";
 import {WriterModel as Writer}  from "../models/Writer.models.js";
 import  cloudinary  from "../service/cloudinary.service.js";
 import {userModel as User} from "../models/user.model.js";
+import type { RequestHandler } from "express";
 
-const getWriters=async(req, res)=>{
+const getWriters:RequestHandler=async(req, res)=>{
     try{
 
     }catch(error){
@@ -12,7 +13,7 @@ const getWriters=async(req, res)=>{
     }
 };
 
-const getWriter=async(req, res)=>{
+const getWriter:RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         if(!mongoose.Types.ObjectId.isValid(id)){
@@ -60,7 +61,7 @@ const getWriter=async(req, res)=>{
     }
 };
 
-const createWriter=async(req, res)=>{
+const createWriter:RequestHandler=async(req, res)=>{
     try{
         const WriterData=req.body;
         if(req.file){
@@ -75,7 +76,7 @@ const createWriter=async(req, res)=>{
     }
 };
 
-const updateWriterProfile=async(req, res)=>{
+const updateWriterProfile:RequestHandler=async(req, res)=>{
     try{
         const WriterId=req.Writer.id;
         const Writer =   await Writer.findById(WriterId);
@@ -115,7 +116,7 @@ const updateWriterProfile=async(req, res)=>{
     }
 };
 
-const updateWriter=async(req, res)=>{
+const updateWriter:RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         const updateData={...req.body};
@@ -152,7 +153,7 @@ const updateWriter=async(req, res)=>{
     }
 };
 
-const deleteWriter=async(req, res)=>{
+const deleteWriter:RequestHandler=async(req, res)=>{
     try{
         const {id}=req.params;
         const deleteWriter=await Writer.findByIdAndDelete(id);
