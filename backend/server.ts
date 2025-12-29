@@ -7,16 +7,16 @@ import passport from "passport";
 import MongoStore from "connect-mongo";
 import session from "express-session";
 
-import {dbMiddleware} from "./middleware/index.ts";
-import {adminRoutes, userRoutes, readerRoutes, contentRoutes, creatorRoutes, chatRoutes} from "./routes/index.ts";
-import {PORT, SESSION_SECRECT, MONGO_URI} from "./config/index.ts";
-import {connectDB} from "./config/db.config.ts";
+import {dbMiddleware} from "./middleware/index.js";
+import {writerRoutes, userRoutes, readerRoutes, contentRoutes} from "./routes/index.js"
+import {PORT, SESSION_SECRECT, MONGO_URI} from "./config/index.js";
+import {dbConnect} from "./config/db.config.js";
 
-import morganConfig from "./config/morgan.config.ts";
+import morganConfig from "./config/morgan.config.js";
 
 const app=express();
 
-    connectDB();
+    dbConnect();
     console.log("Databasae connected successfully");
 
     app.use(morganConfig);

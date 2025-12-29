@@ -1,11 +1,11 @@
 import crypto from "crypto";
-import { userModel as User } from '../models/user.model.js';
+import User  from '../models/user.model.js';
 import {sendEmail} from "../utils/email.util.js";
 import { OTP_EXPIRES_MINUTES } from "../config/env.config.js";
 
 const generateOTP=()=>crypto.randomInt(100000, 999999).toString();
 
-const sendVerificationEmail=async(user)=>{
+const sendVerificationEmail=async(user: { _id: any; fullName: any; email: any; })=>{
     try{
         
     const token=generateOTP();
@@ -31,7 +31,7 @@ const sendVerificationEmail=async(user)=>{
 }
 
 
-const verifyOTP=async(userId, token)=>{
+const verifyOTP=async(userId: any, token: any)=>{
     try{
         const user=await User.findOne({
         _id: userId,

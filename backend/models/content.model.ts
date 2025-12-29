@@ -39,4 +39,4 @@ const content_Schema=new Schema({
 
 type Content = InferSchemaType<typeof content_Schema>;
 
-export default model<Content>('contentModel', content_Schema,'content');
+export default model<Content>('Content', content_Schema,'content');

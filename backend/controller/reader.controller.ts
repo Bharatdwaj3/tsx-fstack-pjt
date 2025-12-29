@@ -1,8 +1,39 @@
 import mongoose from "mongoose";
-import {readerModel as Reader} from "../models/reader.models.js";
-import {userModel as User} from "../models/user.model.js";
-import cloudinary from "../service/cloudinary.service.js";
+import Reader from "../models/reader.model.js";
+import User from "../models/user.model.js";
+import cloudinary from "../services/cloudinary.service.js";
 import type { RequestHandler } from "express";
+
+interface res_Registration{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_Profile{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_OAuth_Discord{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_OAuth_Google{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_Login{
+  success: boolean,
+  message: String,
+  code: String
+};
+
 
 const getReaders:RequestHandler=async(req, res)=>{
     try{

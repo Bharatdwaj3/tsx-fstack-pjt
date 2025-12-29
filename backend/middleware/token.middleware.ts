@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { userModel as User } from '../models/user.model.js';
+import User from '../models/user.model.js';
 import { JWT_ACC_SECRECT, JWT_ACC_EXPIRES_IN, JWT_REF_SECRECT, JWT_REF_EXPIRES_IN } from "../config/env.config.js";
 import type { Request, Response } from "express";
 import { User } from './../interfaces/index';
@@ -13,7 +13,7 @@ const cookieOpts=(maxAge, path='/')=>({
     maxAge: maxAge*1000
 });
 
-const setAccessToken=(res: Response, user)=>{
+const setAccessToken=(res: Response, user: Response)=>{
     const payload={
         user: {
             id: user._id.toString(),

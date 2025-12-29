@@ -1,9 +1,38 @@
 import mongoose from "mongoose";
-import createHttpError from "http-errors";
-import {userModel as User} from "../models/user.model.js";
-import {contentModel as Content} from "../models/content.models.js";
-import cloudinary from "../service/cloudinary.service.js";
+import User from "../models/user.model.js";
+import Content from "../models/content.model.js";
+import cloudinary from "../services/cloudinary.service.js";
 import type { RequestHandler } from "express";
+
+interface res_Registration{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_Profile{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_OAuth_Discord{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_OAuth_Google{
+  success: boolean,
+  message: String,
+  code: String
+};
+
+interface res_Login{
+  success: boolean,
+  message: String,
+  code: String
+};
 
 const getContents:RequestHandler =async(req, res)=>{
     try{

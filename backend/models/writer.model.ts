@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, {Schema, model} from "mongoose";
 import express from 'express';
+import type { InferSchemaType} from "mongoose";
 
-export const writer_Schema=new mongoose.Schema({
+const writer_Schema=new mongoose.Schema({
     
     
     bio:{
@@ -34,5 +35,6 @@ export const writer_Schema=new mongoose.Schema({
     }
 );
 
+type Writer=InferSchemaType<typeof writer_Schema>
 
-export const writerModel = mongoose.model('writerModel', writer_Schema,'writer');
+export default model<Writer>('Writer', writer_Schema,'writer');

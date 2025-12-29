@@ -41,4 +41,4 @@ const reader_Schema=new Schema({
 
 type Reader=InferSchemaType<typeof reader_Schema>
 
-export default model<Reader>('readerModel', reader_Schema,'reader');
+export default model<Reader>('Reader', reader_Schema,'reader');

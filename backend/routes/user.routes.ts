@@ -7,7 +7,7 @@ import {registerUser,
   logoutUser,
   profileUser,
   oauthSuccess
-}from '../controllers/user.controller.js';
+}from '../controller/user.controller.js';
 import {checkPermission} from "../middleware/permission.middleware.js";
 import {roleMiddleware} from "../middleware/role.middleware.js";
 import {authUser} from "../middleware/auth.middleware.js";
