@@ -1,4 +1,10 @@
-const PERMISSIONS = {
+type Permissions= {
+    admin:string[];
+    creator:string[];
+    reader:string[];
+}
+
+const PERMISSIONS:Permissions  = {
   admin: [   
     'list_users',
     'view_profile',
@@ -34,3 +40,5 @@ const PERMISSIONS = {
 };
 
 export default PERMISSIONS;
+
+

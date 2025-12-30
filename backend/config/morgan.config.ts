@@ -1,4 +1,6 @@
 import morgan, { token } from 'morgan';
+import type { RequestHandler } from "express";
+
 
 // 🌈 Colorize HTTP methods
 token('colored-method', (req) => {
@@ -13,7 +15,7 @@ token('colored-method', (req) => {
 });
 
 // 🌈 Colorize status codes
-token('colored-status', (req: Request, res: Response) => {
+token('colored-status', (req, res) => {
   const status = res.statusCode;
   if (status >= 500) return `\x1b[31m${status}\x1b[0m`; // red
   if (status >= 400) return `\x1b[33m${status}\x1b[0m`; // yellow

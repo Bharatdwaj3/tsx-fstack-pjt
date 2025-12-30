@@ -45,17 +45,14 @@ const app=express();
 
     app.get('/',(req, res)=> res.send("Server ready"));
 
-    app.use("/api/admin", adminRoutes);
     app.use("/api/user",userRoutes);
     app.use("/api/user/reader", readerRoutes);
+    app.use("/api/user/writer", writerRoutes);
     app.use("/api/content", contentRoutes);
-    app.use("/api/user/creator", creatorRoutes);
-    app.use("/api/user/chat", chatRoutes);
-
         
         
 
-    app.use(dbMiddleware);
+    app.use(dbConnect);
 
     app.listen(PORT,()=>{
             console.log(`Server started at ${PORT}`);
