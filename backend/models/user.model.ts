@@ -37,7 +37,7 @@ const user_Schema=new Schema({
         type: String,
         required: [true, 'Account type required'],
             enum: {
-                values: ['consumer', 'author', 'admin', 'guest'],
+                values: ['consumer', 'author', 'admin'],
                 message: 'Invalid account type'
         }
     },

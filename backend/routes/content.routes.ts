@@ -42,13 +42,7 @@ router.get(
     updateContent
 );
 
-router.get(
-    '/profile/:id',
-    authUser,
-    roleMiddleware(['admin','creator']),
-    checkPermission('update_profile'),
-    updateContentProfile
-);
+
 
 router.get(
     '/profile/:id',

@@ -1,7 +1,7 @@
 import bycrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User  from "../models/user.model.js";
-import { setAccessToken, setRefreshToken, clearAuthCookies, revokeRefreshToken, refreshTokenHandler, destroySession } from '../middleware/token.middleware';
+import { setAccessToken, setRefreshToken, clearAuthCookies, revokeRefreshToken, refreshTokenHandler, destroySession } from '../middleware/token.middleware.js';
 import { sendVerificationEmail } from '../middleware/email.middleware.js';
 import type { RequestHandler } from "express";
 
