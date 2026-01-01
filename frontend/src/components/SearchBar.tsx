@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { RiSearch2Line } from 'react-icons/ri';
 
-export default function SearchBar() {
+export default function SearchBar(): JSX.Element {
 
     const [focused, setFocused]=useState(false);
     const [search, setSearch]=useSearchParams();
