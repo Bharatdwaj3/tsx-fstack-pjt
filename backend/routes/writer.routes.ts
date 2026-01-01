@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();  
+import { Router } from 'express';
+const router = Router();
 import upload from "../services/multer.service.js";
 
 
@@ -17,7 +17,7 @@ import {authUser} from "../middleware/auth.middleware.js";
 
 router.get(
     '/profile/:id',
-    roleMiddleware(['admin','Writer']),
+    roleMiddleware(['admin','writer']),
     checkPermission('view_profile'),
     getWriter
 );

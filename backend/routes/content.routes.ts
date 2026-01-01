@@ -1,13 +1,13 @@
-import express from "express";
-import upload from "../service/multer.service.js";
-import router from express.Router();
+import upload from "../services/multer.service.js";
+import { Router } from 'express';
+const router = Router();
 import {
   getContents,
   getContent,
   createContent,
   updateContent,
   deleteContent
-} from "../controllers/creator.controller.js";
+} from "../controller/content.controller.js";
 
 import {checkPermission} from "../middleware/permission.middleware.js";
 import {roleMiddleware} from "../middleware/role.middleware.js";

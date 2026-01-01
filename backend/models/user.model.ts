@@ -50,8 +50,7 @@ const user_Schema=new Schema({
     emailVerificationExpires: {type: Date, select: false}
 },{
     timestamps:true,
-    toJSON: { virtuals: true, transform: (doc, ret) => { delete ret.password; } },
-    toObject: { virtuals: true, transform: (doc, ret) => { delete ret.password; } }
+    
 });
 
 
