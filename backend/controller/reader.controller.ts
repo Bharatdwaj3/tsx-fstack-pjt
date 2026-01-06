@@ -1,54 +1,29 @@
-import mongoose from "mongoose";
+import mongoose  from "mongoose";
 import Reader from "../models/reader.model.js";
+import  cloudinary  from "../services/cloudinary.service.js";
 import User from "../models/user.model.js";
-import cloudinary from "../services/cloudinary.service.js";
 import type { RequestHandler } from "express";
 
-interface res_Registration{
-  success: boolean,
-  message: String,
-  code: String
-};
+import {
+    req_putReader,
+    res_putReader,res_delReader,res_listReaders,res_profileReader
+} from '../types.js';
 
-interface res_Profile{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-interface res_OAuth_Discord{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-interface res_OAuth_Google{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-interface res_Login{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-
-const getReaders:RequestHandler=async(req, res)=>{
+const getReaders:RequestHandler=async(req, res:res_listReaders)=>{
     try{
-
+        const reader = await Reader.find({}).lean();
+    res.status(200).json(reader);
     }catch(error){
         console.error("Cannot get Readers!!",error);
         res.status(500).json({message: error.message});
     }
 };
 
-const getReader:RequestHandler=async(req, res)=>{
+const getReader:RequestHandler=async(req, res:res_profileReader)=>{
     try{
         const {id}=req.params;
         if(!mongoose.Types.ObjectId.isValid(id)){
-            return res.status(400).json({message: "Invalid Reader ID format"});
+            return res.status(400).json({message: "Invalid Writer ID format"});
         }
         const [aggregatedReader]=await User.aggregate([
             {
@@ -74,7 +49,7 @@ const getReader:RequestHandler=async(req, res)=>{
                                 _id: "$_id",
                                 fullName: "$fullName",
                                 email: "$email",
-                                accountType: "$accountType",
+                                accountType: "$accountTYpe",
                             },
                             {$ifNull: ["$profile",{}]},
                         ],
@@ -87,7 +62,7 @@ const getReader:RequestHandler=async(req, res)=>{
         }
         res.status(200).json(aggregatedReader);
     }catch(error){
-        console.error("Cannot get Reader",error);
+ console.error("Cannot get Reader",error);
         res.status(500).json({message: error.message});
     }
 };
@@ -100,32 +75,32 @@ const createReader:RequestHandler=async(req, res)=>{
             ReaderData.cloudinaryId=req.file.filename;
         }
         const Reader=await Reader.create(ReaderData);
-        res.status(201).json(Reader);
+        res.status(201).json(reader);
     }catch(error){
-        onsole.error("Cannot get Reader",error);
+        console.error("Cannot create Reader",error);
         res.status(500).json({message: error.message});
     }
 };
 
-const updateReaderProfile:RequestHandler=async(req, res)=>{
+const updateReaderProfile:RequestHandler=async(req:req_putReader, res:res_putReader)=>{
     try{
         const userId=req.user.id;
         const user =   await User.findById(userId);
         
-        if(!user) return res.status(404).json({message: "User not found!!"});
-        if(user.accountType !== "Reader" && user.accountType !== "admin"){
+        if(!user) return res.status(404).json({message: "Reader not found!!"});
+        if(user.accountType !== "reader" && user.accountType !== "admin"){
             return res.status(403).json({message: "You don't have permissions to edit this"});
         }
         
         const profileData={...req.body, userId};
-        let oldReader=null;
+        let oldWriter=null;
 
         if(req.file){
             profileData.imageUrl=req.file.path;
             profileData.cloudinaryId=req.file.filename;
 
-            oldReader=await Reader.findOne({userId});
-            if(oldReader?.cloudinaryId){
+            oldWriter=await Reader.findOne({userId});
+            if(oldWriter?.cloudinaryId){
                 await cloudinary.uploader.destroy(oldReader.cloudinaryId);
             }
         }
@@ -153,11 +128,11 @@ const updateReader:RequestHandler=async(req, res)=>{
         const updateData={...req.body};
 
         const targetReader=await Reader.findById(id);
-        if(!targetReader)  return req.status(404).json({message: "Reader not found!"});
+        if(!targetReader)  return req.status(404).json({message: "Writer not found!"});
         
-        const currentUser=await User.findById(req.user.id);
-        const isReader=targetReader.userId.toString()===req.user.id;
-        const isAdmin=currentUser?.accountType==="admin";
+        const currentReader=await Reader.findById(req.reader.id);
+        const isWriter=targetReader.readerId.toString()===req.reader.id;
+        const isAdmin=currentReader?.accountType==="admin";
         
         if(!isReader && !isAdmin){
             return res.status(403).json({message:"Unathorized to update this Reader!"});
@@ -172,19 +147,19 @@ const updateReader:RequestHandler=async(req, res)=>{
             }
         }
 
-        const updated=await Reader.findByIdAndUpdate(id, updateData,{
+        const updated=await Writer.findByIdAndUpdate(id, updateData,{
             new: true,
             runValidators: true,
         });
 
         res.status(200).json(updated);
     }catch(error){
-        console.error("UpdateReader error: ",error);
+        console.error("Update Reader error: ",error);
         res.status(500).json({message: error.message});
     }
 };
 
-const deleteReader:RequestHandler=async(req, res)=>{
+const deleteReader:RequestHandler=async(req, res:res_delReader)=>{
     try{
         const {id}=req.params;
         const deleteReader=await Reader.findByIdAndDelete(id);
@@ -192,19 +167,19 @@ const deleteReader:RequestHandler=async(req, res)=>{
             return res.status(404).json({message: "Reader not found"});
         }
         if(deleteReader.cloudinaryId){
-            await cloudinary.uploader.destroy(deleteReader.cloudinary.cloudinaryId);
+            await cloudinary.uploader.destroy(deleteReader.cloudinaryId);
         }
         res.status(200).json({
             message: "Reader deleted successfully",
             deletedReaderId: deleteReader._id
         });
     }catch(error){
-        console.error("deleteReader error: ", error);
+        console.error("Reader deletion error: ", error);
         res.status(500).json({message: error.message});
     }
 };
 
-export {
+export  {
   getReaders,
   getReader,
   createReader,

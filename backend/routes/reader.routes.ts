@@ -4,7 +4,6 @@ import upload from "../services/multer.service.js";
 import {
   getReaders,
   getReader,
-  createReader,
   updateReaderProfile,
   deleteReader
 } from "../controller/reader.controller.js";
@@ -13,40 +12,32 @@ import {roleMiddleware} from "../middleware/role.middleware.js";
 import {authUser} from "../middleware/auth.middleware.js";
 
 
-router.get(
-    '/',
+router.get('/',
+    authUser,
     roleMiddleware(['admin','reader','writer']),
-    checkPermission('list_leaders'),
+    checkPermission('list_readers'),
     getReaders
 );
 
-router.get(
-    '/profile/:id',
+router.get('/:id',
+    authUser,
     roleMiddleware(['admin','reader']),
     checkPermission('view_reader'),
     getReader
 );
 
-router.get(
-    '/profile/:id',
-    roleMiddleware(['admin','reader']),
-    checkPermission('create_reader'),
-    createReader
-);
-
-router.get(
-    '/profile/:id',
+router.put('/profile/:id',
     authUser,
     roleMiddleware(['admin','reader']),
-    checkPermission('update_profile'),
+    checkPermission('update_reader'),
+    upload.single('image'),
     updateReaderProfile
 );
 
-router.get(
-    '/profile/:id',
+router.delete('/profile/:id',
     authUser,
     roleMiddleware(['admin','reader']),
-    checkPermission('deactivate_account'),
+    checkPermission('delete_reader'),
     deleteReader
 );
 

@@ -1,7 +1,7 @@
 import bycrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User  from "../models/user.model.js";
-import { setAccessToken, setRefreshToken, clearAuthCookies, revokeRefreshToken, refreshTokenHandler, destroySession } from '../middleware/token.middleware.js';
+import { setAccessToken, setRefreshToken, clearAuthCookies, revokeRefreshToken, refreshTokenHandler} from '../middleware/token.middleware.js';
 import { sendVerificationEmail } from '../middleware/email.middleware.js';
 import type { RequestHandler } from "express";
 import {
@@ -64,7 +64,7 @@ const registerUser:RequestHandler=async(req:req_Registeration, res:res_Registrat
   }
 };
 
-const loginUser:RequestHandler=async(req: req_Registeration, res:res_Login)=>{
+const loginUser:RequestHandler=async(req: req_Login, res:res_Login)=>{
   try{
     const {email, password}=req.body;
     if(!email || !password){
@@ -143,7 +143,6 @@ const oauthSuccess:RequestHandler=async(req, res)=>{
 
     setAccessToken(res, req.user);
     await setRefreshToken(res, req.user);
-    destroySession(req, res);
 
     res.json({
       success: true,
@@ -174,7 +173,6 @@ const logoutUser:RequestHandler=async(req, res)=>{
       await revokeRefreshToken(req.user.id);
     }
     clearAuthCookies(res);
-    destroySession(req, res);
     res.json({
       success: true,
       message: 'User logged out successfully',
@@ -191,10 +189,13 @@ const logoutUser:RequestHandler=async(req, res)=>{
 }
 
 const profileUser:RequestHandler=async(req, res)=>{
+  
+  
   try{
-    const user=await User.findById(req.user._id)
-      .select('-password -accounType -refreshTokenn -googleId -discordId')
-      
+    const user=await User.findById(req.user.id)
+  
+    .select('-password -accounType -refreshTokenn -googleId -discordId')
+  
     if(!user){
       return res.status(404).json({
         success: false,
@@ -206,7 +207,7 @@ const profileUser:RequestHandler=async(req, res)=>{
       success: true,
       message: 'Welcome to your dashboard!',
       user:{
-        id: user._id,
+        id: user.id,
         userName: user.userName,
         fullName: user.fullName,
         email: user.email,

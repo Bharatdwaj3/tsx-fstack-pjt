@@ -4,64 +4,39 @@ import  cloudinary  from "../services/cloudinary.service.js";
 import User from "../models/user.model.js";
 import type { RequestHandler } from "express";
 
-interface res_Registration{
-  success: boolean,
-  message: String,
-  code: String
-};
+import {
+    req_putCreator,
+    res_putCreator,res_delCreator,res_listCreators,res_profileCreator
+} from '../types.js';
 
-interface res_Profile{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-interface res_OAuth_Discord{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-interface res_OAuth_Google{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-interface res_Login{
-  success: boolean,
-  message: String,
-  code: String
-};
-
-
-const getWriters:RequestHandler=async(req, res)=>{
+const getWriters:RequestHandler=async(req, res:res_listCreators)=>{
     try{
-
+        const writer = await Writer.find({}).lean();
+    res.status(200).json(writer);
     }catch(error){
         console.error("Cannot get Writers!!",error);
         res.status(500).json({message: error.message});
     }
 };
 
-const getWriter:RequestHandler=async(req, res)=>{
+const getWriter:RequestHandler=async(req, res:res_profileCreator)=>{
     try{
         const {id}=req.params;
         if(!mongoose.Types.ObjectId.isValid(id)){
-            return res.status(400).json({message: "Invalid seller ID format"});
+            return res.status(400).json({message: "Invalid Writer ID format"});
         }
-        const [aggregatedSeller]=await Writer.aggregate([
+        const [aggregatedWriter]=await User.aggregate([
             {
                 $match:{
                     _id: new mongoose.Types.ObjectId(id), 
-                    accountType:"Writer", 
+                    accountType:"writer", 
                 },
             },
             {
                 $lookup:{
-                    from: "Writer",
+                    from: "writer",
                     localField:"_id",
-                    foreignField: "WriterId",
+                    foreignField: "userId",
                     as: "profile",
                 },
             },
@@ -74,7 +49,7 @@ const getWriter:RequestHandler=async(req, res)=>{
                                 _id: "$_id",
                                 fullName: "$fullName",
                                 email: "$email",
-                                accountType: "$accountType",
+                                accountType: "$accountTYpe",
                             },
                             {$ifNull: ["$profile",{}]},
                         ],
@@ -82,10 +57,10 @@ const getWriter:RequestHandler=async(req, res)=>{
                 },
             },
         ]);
-        if(!aggregatedSeller){
+        if(!aggregatedWriter){
             return res.status(404).json({message: "Writer profile not found"});
         }
-        res.status(200).json(aggregatedSeller);
+        res.status(200).json(aggregatedWriter);
     }catch(error){
         console.error("Cannot get Writer",error);
         res.status(500).json({message: error.message});
@@ -99,39 +74,39 @@ const createWriter:RequestHandler=async(req, res)=>{
             WriterData.imageUrl=req.file.path;
             WriterData.cloudinaryId=req.file.filename;
         }
-        const Writer=await Writer.create(WriterData);
-        res.status(201).json(Writer);
+        const writer=await writer.create(WriterData);
+        res.status(201).json(writer);
     }catch(error){
-        onsole.error("Cannot get Writer",error);
+        console.error("Cannot create Writer",error);
         res.status(500).json({message: error.message});
     }
 };
 
-const updateWriterProfile:RequestHandler=async(req, res)=>{
+const updateWriterProfile:RequestHandler=async(req:req_putCreator, res:res_putCreator)=>{
     try{
-        const WriterId=req.Writer.id;
-        const Writer =   await Writer.findById(WriterId);
+        const userId=req.user.id;
+        const user =   await User.findById(userId);
         
-        if(!Writer) return res.status(404).json({message: "Writer not found!!"});
-        if(Writer.accountType !== "Writer" && Writer.accountType !== "admin"){
+        if(!user) return res.status(404).json({message: "Writer not found!!"});
+        if(user.accountType !== "writer" && user.accountType !== "admin"){
             return res.status(403).json({message: "You don't have permissions to edit this"});
         }
         
-        const profileData={...req.body, WriterId};
+        const profileData={...req.body, userId};
         let oldWriter=null;
 
         if(req.file){
             profileData.imageUrl=req.file.path;
             profileData.cloudinaryId=req.file.filename;
 
-            oldWriter=await Writer.findOne({WriterId});
+            oldWriter=await Writer.findOne({userId});
             if(oldWriter?.cloudinaryId){
                 await cloudinary.uploader.destroy(oldWriter.cloudinaryId);
             }
         }
 
         const updated=await Writer.findOneAndUpdate(
-            {WriterId},
+            {userId},
             {$set: profileData},
             {
                 new: true,
@@ -155,8 +130,8 @@ const updateWriter:RequestHandler=async(req, res)=>{
         const targetWriter=await Writer.findById(id);
         if(!targetWriter)  return req.status(404).json({message: "Writer not found!"});
         
-        const currentWriter=await Writer.findById(req.Writer.id);
-        const isWriter=targetWriter.WriterId.toString()===req.Writer.id;
+        const currentWriter=await Writer.findById(req.writer.id);
+        const isWriter=targetWriter.writerId.toString()===req.writer.id;
         const isAdmin=currentWriter?.accountType==="admin";
         
         if(!isWriter && !isAdmin){
@@ -184,22 +159,22 @@ const updateWriter:RequestHandler=async(req, res)=>{
     }
 };
 
-const deleteWriter:RequestHandler=async(req, res)=>{
+const deleteWriter:RequestHandler=async(req, res:res_delCreator)=>{
     try{
         const {id}=req.params;
         const deleteWriter=await Writer.findByIdAndDelete(id);
         if(!deleteWriter){
-            return res.status(404).json({message: "Seller not found"});
+            return res.status(404).json({message: "Writer not found"});
         }
         if(deleteWriter.cloudinaryId){
-            await cloudinary.uploader.destroy(deleteSeller.cloudinary.cloudinaryId);
+            await cloudinary.uploader.destroy(deleteWriter.cloudinaryId);
         }
         res.status(200).json({
-            message: "Seller deleted successfully",
+            message: "Writer deleted successfully",
             deletedWriterId: deleteWriter._id
         });
     }catch(error){
-        console.error("deleteSeller error: ", error);
+        console.error("Seller deletion error: ", error);
         res.status(500).json({message: error.message});
     }
 };

@@ -37,7 +37,7 @@ const user_Schema=new Schema({
         type: String,
         required: [true, 'Account type required'],
             enum: {
-                values: ['consumer', 'author', 'admin'],
+                values: ['reader', 'writer', 'admin'],
                 message: 'Invalid account type'
         }
     },
@@ -56,4 +56,4 @@ const user_Schema=new Schema({
 
 type User=InferSchemaType<typeof user_Schema>
 
-export default model<User>('User', user_Schema,'content');
+export default model<User>('userModel', user_Schema,'user');

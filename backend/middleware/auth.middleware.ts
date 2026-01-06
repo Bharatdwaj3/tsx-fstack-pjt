@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User  from '../models/user.model.js';
 import { JWT_ACC_SECRECT } from "../config/env.config.js";
-import type { Express, Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 import express from "express";
 
@@ -26,18 +26,6 @@ export const authUser = async (req: Request, res: Response, next: NextFunction) 
     } catch (errr) {
       console.warn(`JWT verification failed: ${errr.message}`);
       return res.status(401).json({ message: "Invalid token", code: "JWT_VERIFY_FAIL" });
-    }
-  }
-    if (req.session && req.session.passport && req.session.passport.user) {
-    try {
-      const sessionUser = await User.findById(req.session.passport.user).select("isActive");
-      if (sessionUser && sessionUser.isActive) { 
-        req.user = { id: sessionUser._id, accountType: sessionUser.accountType };
-        req.authMethod = "session";
-        return next();
-      }
-    } catch (err) {
-      console.error("Session user validation failed: ", err);
     }
   }
 

@@ -4,7 +4,8 @@ import type { InferSchemaType} from "mongoose";
 
 const writer_Schema=new mongoose.Schema({
     
-    
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+
     bio:{
         type:String,
         required: true,
@@ -37,4 +38,4 @@ const writer_Schema=new mongoose.Schema({
 
 type Writer=InferSchemaType<typeof writer_Schema>
 
-export default model<Writer>('Writer', writer_Schema,'writer');
+export default model<Writer>('writerModel', writer_Schema,'writer');

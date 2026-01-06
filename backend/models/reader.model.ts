@@ -4,6 +4,7 @@ import type { InferSchemaType} from "mongoose";
 
 
 const reader_Schema=new Schema({
+     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     
     
     bio:{
@@ -41,4 +42,4 @@ const reader_Schema=new Schema({
 
 type Reader=InferSchemaType<typeof reader_Schema>
 
-export default model<Reader>('Reader', reader_Schema,'reader');
+export default model<Reader>('readerModel', reader_Schema,'reader');

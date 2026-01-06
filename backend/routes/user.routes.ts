@@ -18,6 +18,7 @@ import passport from 'passport';
 router.post('/register', registerUser);
 router.post('/login',loginUser);
 router.get('/profile',authUser,profileUser);
+
 router.post('/logout',authUser,logoutUser);
 router.get('/refresh',refreshToken);
 

@@ -101,15 +101,6 @@ const refreshTokenHandler=async(req: Request, res: Response)=>{
 };
 
 
-const destroySession=(req, res)=>{
-    if(req.session){
-        req.session.destroy((err: Error)=>{
-            if(err)
-                console.error("Session destroy error: ",err);
-        });
-    }
-    res.clearCookie("connect.sid");
-};
 
 export {
   setAccessToken,
@@ -117,6 +108,5 @@ export {
   clearAuthCookies,
   revokeRefreshToken,
   refreshTokenHandler,
-  destroySession,
   cookieOpts
 };

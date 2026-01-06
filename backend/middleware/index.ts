@@ -7,7 +7,6 @@ import {
   clearAuthCookies,
   revokeRefreshToken,
   refreshTokenHandler,
-  destroySession,
   cookieOpts
 }
     from "./token.middleware.js";
@@ -24,7 +23,6 @@ export {
     clearAuthCookies,
     revokeRefreshToken,
     refreshTokenHandler,
-    destroySession,
     cookieOpts,
     sendVerificationEmail,
     verifyOTP,
